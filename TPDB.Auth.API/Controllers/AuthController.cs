@@ -19,25 +19,30 @@ namespace TPDB.Auth.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly TPDBContext db;
+        private readonly TPDBAuthContext db;
         private readonly IOptions<AuthOptions> _authOptions;
 
-        public AuthController(TPDBContext context, IOptions<AuthOptions> authOptions)
+        //Инжектируем контекст и опции AuthOptions из библиотеки Auth.Common
+        public AuthController(TPDBAuthContext context, IOptions<AuthOptions> authOptions)
         {
             db = context;
             _authOptions = authOptions;
         }
 
+        //Login endpoint
         [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]Login request)
         {
+            //"Аутентификация" пользователя по эмэйлу и паролю из реквеста 
             var user = await AuthenticateUser(request.Email, request.Password);
 
             if (user != null)
             {
+                //Генерация JWT-токена на основе данных пользователя
                 var token = GenerateJWT(user);
 
+                //Возвращаем созданный JWT-токен
                 return Ok(new
                 {
                     access_token = token
@@ -47,29 +52,37 @@ namespace TPDB.Auth.API.Controllers
             return Unauthorized();
         }
 
+        //Метод аутентификации пользователя
         private async Task<Account> AuthenticateUser(string email, string password)
         {
+            //Поиск в базе на основе эмэйла и пароля
             return await db.Users.SingleOrDefaultAsync(u => u.Password == password && u.Email == email);
         }
 
+        //Метод генерации JWT-токена на основе данных пользователя
         private string GenerateJWT(Account user)
         {
+            //Определение параметров аутентификации как опций AuthOptions
             var authParams = _authOptions.Value;
 
+            //Генерация SymetricSecurityKey для JWT
             var securityKey = authParams.GetSymetricSecurityKey();
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            //Создание клэимов для пользователя (создается клэим эмэйла и sub-клэим)
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
             };
 
+            //Добавление авторизационных клэимов (клэимов ролей)
             foreach (var role in user.Roles)
             {
                 claims.Add(new Claim("role", role.ToString()));
             }
 
+            //Определение token типа JWTSecurityToken
             var token = new JwtSecurityToken(
                 authParams.Issuer,
                 authParams.Audience,
