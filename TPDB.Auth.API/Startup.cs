@@ -27,9 +27,12 @@ namespace TPDB.Auth.API
         {
             services.AddControllers();
 
-            var connection = Configuration.GetConnectionString("TPDBContextConnection");
-            services.AddDbContext<TPDBContext>(options => options.UseSqlServer(connection));
+            //Регистрация контекста
+            var connection = Configuration.GetConnectionString("TPDBAuthContextConnection");
+            services.AddDbContext<TPDBAuthContext>(options => options.UseSqlServer(connection));
 
+            ////Регистрация AuthOptions c параметрами конфигурации 
+            //необходимыми для генерации JWT-токена
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
 
