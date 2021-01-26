@@ -9,7 +9,8 @@ namespace TPDB.Auth.API.Data
 {
     public class DefaultAccounts
     {
-        public static void AddDefaultData(TPDBContext context)
+        //Аккаунты для инициализации БД
+        public static void AddDefaultData(TPDBAuthContext context)
         {
             if (!context.Users.Any())
             {
