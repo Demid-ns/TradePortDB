@@ -9,9 +9,9 @@ using TPDB.Auth.API.Data;
 
 namespace TPDB.Auth.API.Migrations
 {
-    [DbContext(typeof(TPDBContext))]
-    [Migration("20210122113425_Initial")]
-    partial class Initial
+    [DbContext(typeof(TPDBAuthContext))]
+    [Migration("20210123123158_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

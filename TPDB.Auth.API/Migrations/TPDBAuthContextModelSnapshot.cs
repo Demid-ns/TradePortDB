@@ -8,8 +8,8 @@ using TPDB.Auth.API.Data;
 
 namespace TPDB.Auth.API.Migrations
 {
-    [DbContext(typeof(TPDBContext))]
-    partial class TPDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TPDBAuthContext))]
+    partial class TPDBAuthContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
