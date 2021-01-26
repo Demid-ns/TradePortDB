@@ -22,7 +22,8 @@ namespace TPDB.Auth.API
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<TPDBContext>();
+                    var context = services.GetRequiredService<TPDBAuthContext>();
+                    //Инициализация БД изначальными ролями и аккаунтами
                     DefaultRole.AddDefaultData(context);
                     DefaultAccounts.AddDefaultData(context);
                 }
