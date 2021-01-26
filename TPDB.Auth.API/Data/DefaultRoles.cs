@@ -8,7 +8,8 @@ namespace TPDB.Auth.API.Data
 {
     public class DefaultRole
     {
-        public static void AddDefaultData(TPDBContext context)
+        //Роли для инициализации БД
+        public static void AddDefaultData(TPDBAuthContext context)
         {
             if (!context.Roles.Any())
             {
