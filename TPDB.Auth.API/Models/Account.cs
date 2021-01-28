@@ -10,7 +10,8 @@ namespace TPDB.Auth.API.Models
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public List<Role> Roles { get; set; }
+        //Многие ко многим
+        public ICollection<Role> Roles { get; set; }
 
         public Account()
         {
