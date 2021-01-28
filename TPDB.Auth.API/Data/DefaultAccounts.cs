@@ -41,7 +41,7 @@ namespace TPDB.Auth.API.Data
                 };
                 account3.Roles.Add(userRole);
 
-                context.AddRange(account1, account2, account2);
+                context.AddRange(account1, account2, account3);
             }
             context.SaveChanges();
         }
