@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,10 +32,36 @@ namespace TPDB.Resource.API
             var connection = Configuration.GetConnectionString("TPDBResContextConnection");
             services.AddDbContext<TPDBResourceContext>(options => options.UseSqlServer(connection));
 
-            ////Регистрация AuthOptions c параметрами конфигурации 
-            //необходимыми для генерации JWT-токена
-            var authOptionsConfiguration = Configuration.GetSection("Auth");
-            services.Configure<AuthOptions>(authOptionsConfiguration);
+            //Считывание Auth конфигурации
+            var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
+
+            //Установка аутентификации на основе JWT-токена
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    //Разрешает валидировать токен, пришедший по http
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        //Будет ли валидироваться издатель токена?
+                        ValidateIssuer = true,
+                        //Издатель токена
+                        ValidIssuer = authOptions.Issuer,
+
+                        //Будет ли валидироваться потребитель токена?
+                        ValidateAudience = true,
+                        //Потребитель токена
+                        ValidAudience = authOptions.Audience,
+
+                        //Валидировать лайфтайм токена?
+                        ValidateLifetime = true,
+
+                        //Установка ключа безопасности
+                        IssuerSigningKey = authOptions.GetSymetricSecurityKey(), //HS256
+                        //Валидировать ли ключ безопасности?
+                        ValidateIssuerSigningKey = true
+                    };
+                });
 
             services.AddCors(options =>
             {
@@ -57,6 +84,10 @@ namespace TPDB.Resource.API
             }
 
             app.UseRouting();
+            app.UseCors();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
