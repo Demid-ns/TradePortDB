@@ -55,8 +55,10 @@ namespace TPDB.Auth.API.Controllers
         //Метод аутентификации пользователя
         private async Task<Account> AuthenticateUser(string email, string password)
         {
-            //Поиск в базе на основе эмэйла и пароля
-            return await db.Users.SingleOrDefaultAsync(u => u.Password == password && u.Email == email);
+            //Поиск в базе на основе эмэйла и пароля,
+            //таблица ролей инклюдится с целью создания клэйма ролей в дальнейшем
+            return await db.Users.Include(u => u.Roles)
+                .SingleOrDefaultAsync(u => u.Password == password && u.Email == email);
         }
 
         //Метод генерации JWT-токена на основе данных пользователя
@@ -79,7 +81,7 @@ namespace TPDB.Auth.API.Controllers
             //Добавление авторизационных клэимов (клэимов ролей)
             foreach (var role in user.Roles)
             {
-                claims.Add(new Claim("role", role.ToString()));
+                claims.Add(new Claim("role", role.Name));
             }
 
             //Определение token типа JWTSecurityToken
