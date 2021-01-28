@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using TPDB.Resource.API.Data;
 using TPDB.Resource.API.Models;
 
@@ -29,7 +28,10 @@ namespace TPDB.Resource.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Port>>> Get()
         {
-            return await db.Ports.ToListAsync();
+            return await db.Ports
+                .Include(p => p.Commodities)
+                .ThenInclude(p=>p.Product)
+                .ToListAsync();
         }
 
         //Возврат определенного порта (по айди из маршрута)
@@ -37,7 +39,10 @@ namespace TPDB.Resource.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Port>> Get(int id)
         {
-            return await db.Ports.SingleOrDefaultAsync(p => p.Id == id);
+            return await db.Ports
+                .Include(p => p.Commodities)
+                .ThenInclude(p => p.Product)
+                .SingleOrDefaultAsync(p => p.Id == id);
         }
 
         //Добавляем порт из JSON в теле POST-запроса
