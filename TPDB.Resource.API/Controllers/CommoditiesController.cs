@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TPDB.Resource.API.Data;
@@ -9,6 +10,7 @@ namespace TPDB.Resource.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "user, admin")]
     public class CommoditiesController : ControllerBase
     {
         private readonly TPDBResourceContext db;
@@ -21,6 +23,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Возврат всего списка товаров
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Commodity>>> Get()
         {
             return await db.Commodities.Include(c => c.Product).ToListAsync();
@@ -28,6 +31,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Возврат определенного товара (по айди из маршрута)
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Commodity>> Get(int id)
         {
             return await db.Commodities.Include(c => c.Product).SingleOrDefaultAsync(c => c.Id == id);
