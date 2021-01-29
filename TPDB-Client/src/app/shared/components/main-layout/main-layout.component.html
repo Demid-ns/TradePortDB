@@ -1,12 +1,11 @@
 <mat-toolbar color="primary">
   <span>Trade port DB</span>
+  <span class="toolbar-space"></span>
+  <app-login></app-login>
 </mat-toolbar>
 
 <div class="container">
-  <mat-card>
-    <app-login-form></app-login-form>
-    <router-outlet></router-outlet>
-  </mat-card>
+  <router-outlet></router-outlet>
 </div>
 
 
