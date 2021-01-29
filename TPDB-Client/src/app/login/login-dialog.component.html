@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Войдите в систему</h1>
+<form (ngSubmit)="submit()" [formGroup]="form">
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Login</mat-label>
+      <input type="text" matInput formControlName="email">
+      <mat-error
+        *ngIf="form.get('email')!.touched && form.get('email').invalid"
+      >
+        <span *ngIf="form.get('email').errors.required">
+          Поле логина может быть пустым
+        </span>
+        <span *ngIf="form.get('email').errors.email">
+          Введите корректный e-mail
+        </span>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password">
+      <mat-error
+        *ngIf="form.get('password')!.touched && form.get('password').invalid"
+      >
+        <span *ngIf="form.get('password').errors.required">
+          Поле пароля не может быть пустым
+        </span>
+        <span *ngIf="form.get('password').errors.minlength">
+          Пароль должен быть длиннее 4 симвовов
+        </span>
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Отменить</button>
+    <button mat-button
+            type="submit"
+            [disabled]="form.invalid">
+      Ok
+    </button>
+  </div>
+</form>
+
