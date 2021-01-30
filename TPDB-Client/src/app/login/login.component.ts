@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {User} from '../shared/interfaces/user';
+import {User} from '../shared/interfaces/interfaces';
 import {AuthService} from '../shared/services/auth.service';
 import {Router} from '@angular/router';
 
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   private email = '';
   private password = '';
 
-  constructor(public dialog: MatDialog, private auth: AuthService, private router: Router) {
+  constructor(public dialog: MatDialog, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -30,11 +30,6 @@ export class LoginComponent implements OnInit {
     );
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result != null) {
-        this.auth.login(result).subscribe(() => {
-          this.router.navigate(['/', '']);
-        });
-      }
     });
   }
 }
@@ -49,7 +44,8 @@ export class LoginDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User) {
+    @Inject(MAT_DIALOG_DATA) public data: User,
+    private auth: AuthService) {
     this.form = new FormGroup({
       email: new FormControl(null, [Validators.email, Validators.required]),
       password: new FormControl(null, [Validators.minLength(4), Validators.required])
@@ -67,10 +63,11 @@ export class LoginDialogComponent {
 
     const data: User = {
       email: this.form.value.email,
-      password: this.form.value.password
+      password: this.form.value.password,
+      returnJWTToken: false
     };
 
-    this.dialogRef.close(data);
+    this.auth.login(data).subscribe();
   }
 }
 
