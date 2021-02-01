@@ -15,7 +15,11 @@ export class LoginComponent implements OnInit {
   private email = '';
   private password = '';
 
-  constructor(public dialog: MatDialog, private router: Router) {
+  public get isLoggedIn(): boolean {
+    return this.auth.isAuthenticated();
+  }
+
+  constructor(public dialog: MatDialog, private router: Router, private auth: AuthService) {
   }
 
   ngOnInit(): void {
@@ -32,6 +36,10 @@ export class LoginComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
     });
   }
+
+  public logout(): void {
+    this.auth.logout();
+  }
 }
 
 @Component({
@@ -41,6 +49,7 @@ export class LoginComponent implements OnInit {
 })
 export class LoginDialogComponent {
   form: FormGroup;
+  error = '';
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
@@ -67,7 +76,10 @@ export class LoginDialogComponent {
       returnJWTToken: false
     };
 
-    this.auth.login(data).subscribe();
+    this.auth.login(data).subscribe(response => this.dialogRef.close(),
+      () => {
+        this.error = 'Неправильный email или пароль';
+      });
   }
 }
 
