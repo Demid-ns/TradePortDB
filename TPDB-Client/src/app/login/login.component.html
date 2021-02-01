@@ -1,6 +1,16 @@
-<button mat-icon-button
-        class="login-icon"
-        aria-label="Login icon"
-        (click)="openDialog()">
-  <mat-icon>login</mat-icon>
-</button>
+<div *ngIf="!isLoggedIn; else loggedIn">
+  <button mat-icon-button
+          class="login-icon"
+          aria-label="Login icon"
+          (click)="openDialog()">
+    <mat-icon>login</mat-icon>
+  </button>
+</div>
+<ng-template #loggedIn>
+  <button mat-icon-button
+          class="logout-icon"
+          aria-label="Logout icon"
+          (click)="this.logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</ng-template>
