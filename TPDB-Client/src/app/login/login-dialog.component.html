@@ -1,4 +1,11 @@
 <h1 mat-dialog-title>Войдите в систему</h1>
+
+<mat-error *ngIf="!!this.error" class="auth-error">
+        <span>
+          {{this.error}}
+        </span>
+</mat-error>
+
 <form (ngSubmit)="submit()" [formGroup]="form">
   <div mat-dialog-content>
     <mat-form-field>
