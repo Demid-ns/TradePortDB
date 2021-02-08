@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Добавьте продукт</h1>
+
+<mat-error *ngIf="!!this.error" class="adding-error">
+        <span>
+          {{this.error}}
+        </span>
+</mat-error>
+
+<form (ngSubmit)="submit()" [formGroup]="form">
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Название продукта</mat-label>
+      <input type="text" matInput formControlName="name">
+      <mat-error
+        *ngIf="form.get('name')!.touched && form.get('name').invalid"
+      >
+        <span *ngIf="form.get('name').errors.required">
+          Поле названия продукта не может быть пустым
+        </span>
+        <span *ngIf="form.get('name').errors.minlength">
+          Поле названия продукта должно быть длиннее 2 симвовов
+        </span>
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Отменить</button>
+    <button mat-button
+            type="submit"
+            [disabled]="form.invalid">
+      Ok
+    </button>
+  </div>
+</form>
+
