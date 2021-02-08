@@ -19,4 +19,12 @@ export class ProductService {
   public getProduct(id: number): Observable<Product>{
     return this.http.get<Product>(`${environment.resApi}api/products/${id}`);
   }
+
+  public removeProduct(id: number): Observable<void>{
+    return this.http.delete<void>(`${environment.resApi}api/products/${id}`);
+  }
+
+  public addProduct(product: Product): Observable<Product> {
+    return this.http.post<Product>(`${environment.resApi}api/products`, product);
+  }
 }
