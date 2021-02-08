@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {PortsComponent} from './ports/ports.component';
-import {ProductsComponent} from './products/products.component';
+import {ProductsComponent, ProductsDialogComponent} from './products/products.component';
 import {CommoditiesComponent} from './commodities/commodities.component';
 import {MainLayoutComponent} from './shared/components/main-layout/main-layout.component';
 
@@ -19,12 +19,15 @@ import {MatButtonModule} from '@angular/material/button';
 import {LoginComponent, LoginDialogComponent} from './login/login.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatTableModule} from '@angular/material/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AUTH_API_URL, RES_API_URL} from './shared/app-injection-tokens';
 import {environment} from '../environments/environment';
 import {JwtModule} from '@auth0/angular-jwt';
 import {LOCAL_TOKEN_KEY} from './shared/services/auth.service';
+
 
 export function tokenGetter(): string {
   return localStorage.getItem(LOCAL_TOKEN_KEY);
@@ -38,7 +41,8 @@ export function tokenGetter(): string {
     CommoditiesComponent,
     MainLayoutComponent,
     LoginComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    ProductsDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,13 @@ export function tokenGetter(): string {
     FormsModule,
     ReactiveFormsModule,
 
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: environment.tokenAllowedDomains
+      }
+    }),
+
     MatToolbarModule,
     MatCardModule,
     MatFormFieldModule,
@@ -56,11 +67,8 @@ export function tokenGetter(): string {
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-
-    JwtModule.forRoot({
-      config: {tokenGetter,
-      allowedDomains: environment.tokenAllowedDomains}
-    })
+    MatTableModule,
+    MatProgressSpinnerModule,
   ],
   providers: [{
     provide: AUTH_API_URL,
