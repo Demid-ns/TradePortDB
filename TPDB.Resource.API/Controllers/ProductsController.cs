@@ -91,14 +91,22 @@ namespace TPDB.Resource.API.Controllers
         public async Task<ActionResult<Port>> Delete(int id)
         {
             Product product = await db.Products.SingleAsync(p => p.Id == id);
+            //Находим товары, что связаны с продуктом
+            List<Commodity> relatedCommodities = await db.Commodities
+                .Include(c => c.Product)
+                .Where(c => c.Product == product)
+                .ToListAsync();
 
             if (product == null)
             {
                 return BadRequest($"Error while delete. Product with ID {id} not found");
             }
 
-            //удаляем из таблицы указанный продукт
-            db.Products.Remove(product);
+            //удаляем из таблицы указанный продукт и товары,
+            //что связаны с этим продуктом
+            db.Commodities.RemoveRange(relatedCommodities);
+            db.Products.RemoveRange(product);
+
             await db.SaveChangesAsync();
             return Ok(product);
         }
