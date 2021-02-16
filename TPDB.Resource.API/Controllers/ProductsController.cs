@@ -37,7 +37,15 @@ namespace TPDB.Resource.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Product>> Get(int id)
         {
-            return await db.Products.SingleOrDefaultAsync(p => p.Id == id);
+            Product product = await db.Products
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
         }
 
         //Добавляем продукт из JSON в теле POST-запроса
