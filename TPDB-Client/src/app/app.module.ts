@@ -27,6 +27,7 @@ import {AUTH_API_URL, RES_API_URL} from './shared/app-injection-tokens';
 import {environment} from '../environments/environment';
 import {JwtModule} from '@auth0/angular-jwt';
 import {LOCAL_TOKEN_KEY} from './shared/services/auth.service';
+import { LoadingComponent } from './loading/loading.component';
 
 
 export function tokenGetter(): string {
@@ -43,6 +44,7 @@ export function tokenGetter(): string {
     LoginComponent,
     LoginDialogComponent,
     ProductsDialogComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,
