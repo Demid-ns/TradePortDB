@@ -27,15 +27,17 @@ namespace TPDB.Resource.API.Controllers
         //Возврат всего списка продуктов
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
-            return await db.Products.ToListAsync();
+            List<Product> products = await db.Products.ToListAsync();
+
+            return Ok(products);
         }
 
         //Возврат определенного продукта (по айди из маршрута)
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Product>> Get(int id)
+        public async Task<ActionResult<Product>> GetProductById(int id)
         {
             Product product = await db.Products
                 .SingleOrDefaultAsync(p => p.Id == id);
@@ -50,7 +52,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Добавляем продукт из JSON в теле POST-запроса
         [HttpPost]
-        public async Task<ActionResult<Product>> Post([FromBody]ProductPostRequest request)
+        public async Task<ActionResult<Product>> PostProduct([FromBody]ProductPostRequest request)
         {
             if (request == null)
             {
@@ -72,7 +74,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Обновление продукта из JSON в теле PUT-запроса
         [HttpPut]
-        public async Task<ActionResult<Port>> Put([FromBody]ProductPutRequest request)
+        public async Task<ActionResult<Port>> PutProduct([FromBody]ProductPutRequest request)
         {
             if (request == null)
             {
@@ -96,7 +98,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Удаление определенного продукта (по айди из маршрута)
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Port>> Delete(int id)
+        public async Task<ActionResult<Port>> DeleteProduct(int id)
         {
             Product product = await db.Products.SingleAsync(p => p.Id == id);
             //Находим товары, что связаны с продуктом

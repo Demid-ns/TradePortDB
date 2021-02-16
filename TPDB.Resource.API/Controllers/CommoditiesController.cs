@@ -24,15 +24,20 @@ namespace TPDB.Resource.API.Controllers
         //Возврат всего списка товаров
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Commodity>>> Get()
+        public async Task<ActionResult<IEnumerable<Commodity>>> GetAllCommodities()
         {
-            return await db.Commodities.Include(c => c.Product).ToListAsync();
+            List<Commodity> commodities = await db
+                .Commodities
+                .Include(c => c.Product).
+                ToListAsync();
+
+            return Ok(commodities);
         }
 
         //Возврат определенного товара (по айди из маршрута)
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Commodity>> Get(int id)
+        public async Task<ActionResult<Commodity>> GetCommodityById(int id)
         {
             Commodity commodity = await db.Commodities
                 .Include(c => c.Product)
@@ -48,7 +53,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Добавляем товар из JSON в теле POST-запроса
         [HttpPost]
-        public async Task<ActionResult<Commodity>> Post([FromBody]CommodityPostRequest request)
+        public async Task<ActionResult<Commodity>> PostCommodity([FromBody]CommodityPostRequest request)
         {
             if (request == null)
             {
@@ -89,7 +94,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Обновление товара из JSON в теле PUT-запроса
         [HttpPut]
-        public async Task<ActionResult<Commodity>> Put([FromBody]CommodityPutRequest request)
+        public async Task<ActionResult<Commodity>> PutCommodity([FromBody]CommodityPutRequest request)
         {
             if (request == null)
             {
@@ -130,7 +135,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Удаление определенного товара (по айди из маршрута)
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Commodity>> Delete(int id)
+        public async Task<ActionResult<Commodity>> DeleteCommodity(int id)
         {
             Commodity commodity = await db.Commodities.Include(c => c.Product).SingleAsync(c => c.Id == id);
 

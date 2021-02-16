@@ -26,18 +26,20 @@ namespace TPDB.Resource.API.Controllers
         //Возврат всего списка портов
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Port>>> Get()
+        public async Task<ActionResult<IEnumerable<Port>>> GetAllPorts()
         {
-            return await db.Ports
+            List<Port> ports= await db.Ports
                 .Include(p => p.Commodities)
                 .ThenInclude(p => p.Product)
                 .ToListAsync();
+
+            return Ok(ports);
         }
 
         //Возврат определенного порта (по айди из маршрута)
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Port>> Get(int id)
+        public async Task<ActionResult<Port>> GetPortById(int id)
         {
             Port port = await db.Ports
                 .Include(p => p.Commodities)
@@ -54,7 +56,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Добавляем порт из JSON в теле POST-запроса
         [HttpPost]
-        public async Task<ActionResult<Port>> Post([FromBody]PortPostRequest request)
+        public async Task<ActionResult<Port>> PostPort([FromBody]PortPostRequest request)
         {
             if (request == null)
             {
@@ -77,7 +79,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Обновление товара из JSON в теле PUT-запроса
         [HttpPut]
-        public async Task<ActionResult<Port>> Put([FromBody]PortPutRequest request)
+        public async Task<ActionResult<Port>> PutPort([FromBody]PortPutRequest request)
         {
             if (request == null)
             {
@@ -102,7 +104,7 @@ namespace TPDB.Resource.API.Controllers
 
         //Удаление определенного порта (по айди из маршрута)
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Port>> Delete(int id)
+        public async Task<ActionResult<Port>> DeletePort(int id)
         {
             Port port = await db.Ports.SingleAsync(p => p.Id == id);
 
