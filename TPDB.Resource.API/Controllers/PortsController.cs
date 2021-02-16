@@ -30,7 +30,7 @@ namespace TPDB.Resource.API.Controllers
         {
             return await db.Ports
                 .Include(p => p.Commodities)
-                .ThenInclude(p=>p.Product)
+                .ThenInclude(p => p.Product)
                 .ToListAsync();
         }
 
@@ -39,10 +39,17 @@ namespace TPDB.Resource.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<Port>> Get(int id)
         {
-            return await db.Ports
+            Port port = await db.Ports
                 .Include(p => p.Commodities)
                 .ThenInclude(p => p.Product)
                 .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (port == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(port);
         }
 
         //Добавляем порт из JSON в теле POST-запроса
