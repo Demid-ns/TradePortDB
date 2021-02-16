@@ -1,6 +1,4 @@
-<div class="loading" *ngIf="loading; else productBlock">
-  <mat-spinner></mat-spinner>
-</div>
+<app-loading *ngIf="loading; else productBlock"></app-loading>
 
 <ng-template #productBlock>
   <table mat-table [dataSource]="products">
